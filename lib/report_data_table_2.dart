@@ -1,5 +1,8 @@
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
-}
+library report_data_table_2;
+
+// Export all table related files
+export 'src/custom_table_widget/custom_table_cell_data.dart';
+export 'src/custom_table_widget/header.dart';
+export 'src/custom_table_widget/sub_header.dart';
+export 'src/custom_table_widget/column_leaf.dart';
+export 'src/custom_table_widget/table_data.dart';
