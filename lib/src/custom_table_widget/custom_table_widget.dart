@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:report_data_table_2/src/custom_table_widget/table_data.dart';
-
+import '../../report_data_table_2.dart';
 import 'column_leaf.dart';
 
-class CustomDataTable extends StatefulWidget {
+class CustomTableWidget extends StatefulWidget {
   final TableData data;
   final int fixedColumns;
   final double headerHeight;
@@ -12,7 +11,7 @@ class CustomDataTable extends StatefulWidget {
   final double defaultColumnWidth;
   final double? tableHeight;
 
-  const CustomDataTable({
+  const CustomTableWidget({
     Key? key,
     required this.data,
     this.fixedColumns = 0,
@@ -24,10 +23,10 @@ class CustomDataTable extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<CustomDataTable> createState() => _CustomDataTableState();
+  State<CustomTableWidget> createState() => _CustomTableWidgetState();
 }
 
-class _CustomDataTableState extends State<CustomDataTable> {
+class _CustomTableWidgetState extends State<CustomTableWidget> {
   late List<LeafColumn> _leafColumns;
 
   final _leftVerticalScroll = ScrollController();
@@ -92,17 +91,14 @@ class _CustomDataTableState extends State<CustomDataTable> {
         );
       } else {
         for (final s in h.subHeaders) {
-          _leafColumns.add(
-            LeafColumn(h.title, s.title, s.width),
-          );
+          _leafColumns.add(LeafColumn(h.title, s.title, s.width));
         }
       }
     }
   }
 
-
   @override
-  void didUpdateWidget(CustomDataTable oldWidget) {
+  void didUpdateWidget(CustomTableWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.data.headers != widget.data.headers) {
       _flattenHeaders();
@@ -149,19 +145,18 @@ class _CustomDataTableState extends State<CustomDataTable> {
     if (cell.editable) {
       final controller = _editingControllers.putIfAbsent(
         key,
-            () => TextEditingController(text: cell.text ?? ''),
+        () => TextEditingController(text: cell.text ?? ''),
       );
       return TextField(
         controller: controller,
         textAlign: cell.textAlign,
         decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(4), // optional rounding
-              borderSide: const BorderSide(
-                color: Colors.grey,
-                width: 1,
-              ),
-            ), isDense: true,),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(4), // optional rounding
+            borderSide: const BorderSide(color: Colors.grey, width: 1),
+          ),
+          isDense: true,
+        ),
 
         style: TextStyle(color: cell.textColor),
       );
@@ -189,7 +184,7 @@ class _CustomDataTableState extends State<CustomDataTable> {
     }).toList();
 
     final sectionHasSubHeaders = headersInSection.any((h) {
-      return h.subHeaders.isNotEmpty ;
+      return h.subHeaders.isNotEmpty;
     });
 
     return SingleChildScrollView(
@@ -205,14 +200,10 @@ class _CustomDataTableState extends State<CustomDataTable> {
 
           final hasMeaningfulSubHeaders =
               h.subHeaders.isNotEmpty &&
-                  h.subHeaders
-                      .map((s) => s.title)
-                      .toSet()
-                      .length > 1;
+              h.subHeaders.map((s) => s.title).toSet().length > 1;
 
           // If header has meaningful subheaders, split top & sub rows
-          final topHeight =
-          hasMeaningfulSubHeaders && sectionHasSubHeaders
+          final topHeight = hasMeaningfulSubHeaders && sectionHasSubHeaders
               ? widget.headerHeight
               : widget.headerHeight + widget.subHeaderHeight;
 
@@ -228,11 +219,17 @@ class _CustomDataTableState extends State<CustomDataTable> {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                bg: Colors.grey.shade200,
+                bg: h.headerBGColor ?? Colors.grey.shade100,
               ),
               if (hasMeaningfulSubHeaders && sectionHasSubHeaders)
                 Row(
                   children: related.map((c) {
+                    // find corresponding SubHeader model
+                    final sub = h.subHeaders.firstWhere(
+                          (s) => s.title == c.title,
+                      orElse: () => SubHeader(title: c.title, width: c.width),
+                    );
+
                     return _buildCell(
                       width: c.width,
                       height: widget.subHeaderHeight,
@@ -243,10 +240,11 @@ class _CustomDataTableState extends State<CustomDataTable> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      bg: Colors.grey.shade100,
+                      bg: sub.subheaderBGColor ?? h.headerBGColor,
                     );
                   }).toList(),
                 ),
+
             ],
           );
         }).toList(),
@@ -256,8 +254,9 @@ class _CustomDataTableState extends State<CustomDataTable> {
 
   // ---------- BODY BUILDER ----------
   Widget _buildBodyPart({required int fixed, required bool isLeft}) {
-    final columns = isLeft ? _leafColumns.sublist(0, fixed) : _leafColumns
-        .sublist(fixed);
+    final columns = isLeft
+        ? _leafColumns.sublist(0, fixed)
+        : _leafColumns.sublist(fixed);
     final widths = columns.map((c) => c.width).toList();
     final controller = isLeft ? _leftVerticalScroll : _rightVerticalScroll;
 
@@ -302,7 +301,10 @@ class _CustomDataTableState extends State<CustomDataTable> {
   Widget build(BuildContext context) {
     final totalCols = _leafColumns.length;
     final fixed = widget.fixedColumns.clamp(0, totalCols);
-
+    // final heights =
+    //     (widget.data.rows.length * widget.rowHeight) +
+    //     widget.headerHeight +
+    //     widget.subHeaderHeight;    //analyze this part later to calculate dynamic height of the table
     final leftHeader = fixed > 0
         ? _buildHeaderArea(fixed: fixed, isLeft: true)
         : const SizedBox.shrink();
@@ -325,13 +327,10 @@ class _CustomDataTableState extends State<CustomDataTable> {
             ],
           ),
           SizedBox(
-            height: widget.tableHeight ?? 400,
+            height:widget.tableHeight ?? 400,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (fixed > 0) leftBody,
-                rightBody,
-              ],
+              children: [if (fixed > 0) leftBody, rightBody],
             ),
           ),
         ],

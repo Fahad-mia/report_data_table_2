@@ -12,19 +12,20 @@ class DemoTable extends StatelessWidget {
     final header = [
       Header(
         title: "Employee Info",
-        subHeaders: [
-          SubHeader(title: "Name", width: 80),
-          SubHeader(title: "Others", width: 80),
-        ],
+        headerBGColor: Colors.red,
+        // subHeaders: [
+        //   SubHeader(title: "Name", width: 80),
+        //   SubHeader(title: "Others", width: 80),
+        // ],
       ),
       Header(
         title: "Sales Data",
-        subHeaders: [
-          SubHeader(title: "Q1", width: 60),
-          SubHeader(title: "Q2", width: 80),
-          SubHeader(title: "Q3", width: 80),
-          SubHeader(title: "Q4", width: 80),
-        ],
+        // subHeaders: [
+        //   SubHeader(title: "Q1", width: 60),
+        //   SubHeader(title: "Q2", width: 80),
+        //   SubHeader(title: "Q3", width: 80),
+        //   SubHeader(title: "Q4", width: 80),
+        // ],
       ),
       Header(
         title: "Contract",
@@ -54,15 +55,15 @@ class DemoTable extends StatelessWidget {
         ),
         CustomTableCellData(text: department),
         CustomTableCellData(text: "${10000 + index * 100}"),
-        CustomTableCellData(text: "${10500 + index * 100}"),
-        CustomTableCellData(text: "${11000 + index * 100}"),
-        CustomTableCellData(text: "${11500 + index * 100}"),
-        CustomTableCellData(text: isActive ? "Active" : "Expired"),
-        CustomTableCellData(
-          text: "Dhaka",
-          textColor: Colors.blue,
-          textAlign: TextAlign.right,
-        ),
+        CustomTableCellData(text: "${10500 + index * 100}")
+        // CustomTableCellData(text: "${11000 + index * 100}"),
+        // CustomTableCellData(text: "${11500 + index * 100}"),
+        // CustomTableCellData(text: isActive ? "Active" : "Expired"),
+        // CustomTableCellData(
+        //   text: "Dhaka",
+        //   textColor: Colors.blue,
+        //   textAlign: TextAlign.right,
+        // ),
       ];
     });
 
@@ -73,7 +74,7 @@ class DemoTable extends StatelessWidget {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: CustomDataTable(
+        child: CustomTableWidget(
           data: tableData,
           fixedColumns: 2, // Fix first column (Name)
           headerHeight: 52,
