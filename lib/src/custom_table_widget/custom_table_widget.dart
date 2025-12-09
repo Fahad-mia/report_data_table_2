@@ -199,8 +199,7 @@ class _CustomTableWidgetState extends State<CustomTableWidget> {
           final totalWidth = related.fold(0.0, (sum, c) => sum + c.width);
 
           final hasMeaningfulSubHeaders =
-              h.subHeaders.isNotEmpty &&
-              h.subHeaders.map((s) => s.title).toSet().length > 1;
+              h.subHeaders.isNotEmpty;
 
           // If header has meaningful subheaders, split top & sub rows
           final topHeight = hasMeaningfulSubHeaders && sectionHasSubHeaders
@@ -215,7 +214,7 @@ class _CustomTableWidgetState extends State<CustomTableWidget> {
                 child: Center(
                   child: Text(
                     h.title,
-                    style: const TextStyle(fontWeight: FontWeight.bold),
+                    style: h.headerTextStyle ?? TextStyle(fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -236,7 +235,7 @@ class _CustomTableWidgetState extends State<CustomTableWidget> {
                       child: Center(
                         child: Text(
                           c.title,
-                          style: const TextStyle(fontWeight: FontWeight.w500),
+                          style: sub.subheaderTextStyle ?? TextStyle(fontWeight: FontWeight.w500),
                           textAlign: TextAlign.center,
                         ),
                       ),

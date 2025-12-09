@@ -12,11 +12,12 @@ class DemoTable extends StatelessWidget {
     final header = [
       Header(
         title: "Employee Info",
-        headerBGColor: Colors.red,
-        // subHeaders: [
+        headerBGColor: Colors.white,
+        headerTextStyle: TextStyle(color: Colors.red, fontSize: 20),
+        subHeaders: [
         //   SubHeader(title: "Name", width: 80),
-        //   SubHeader(title: "Others", width: 80),
-        // ],
+          SubHeader(title: "Others", width: 120, subheaderTextStyle: TextStyle(color: Colors.green, fontSize: 20)),
+        ],
       ),
       Header(
         title: "Sales Data",
