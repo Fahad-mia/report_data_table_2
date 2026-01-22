@@ -4,7 +4,7 @@ class CustomTableCellData {
   final String? text;
   final Widget? child; // if you want provide custom widget
   final bool editable;
-  final TextAlign textAlign;
+  final Alignment? alignment;
   final EdgeInsets padding;
 
   // visual customization
@@ -17,9 +17,9 @@ class CustomTableCellData {
     this.text,
     this.child,
     this.editable = false,
-    this.textAlign = TextAlign.left,
     this.padding = const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
     this.backgroundColor,
+    this.alignment,
     this.textColor,
     this.fontSize,
     this.border,

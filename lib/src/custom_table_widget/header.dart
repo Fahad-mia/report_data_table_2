@@ -8,6 +8,7 @@ class Header {
   final Color? headerBGColor;
   final List<SubHeader> subHeaders;
   final TextStyle? headerTextStyle;
+  final Alignment? alignment;
 
   Header({
     required this.title,
@@ -15,6 +16,7 @@ class Header {
     this.subHeaders = const [],
     this.headerBGColor,
     this.headerTextStyle,
+    this.alignment
   }) : assert(
          subHeaders.isEmpty || width == null,
          'When using subHeaders, provide widths on subHeaders instead of header width',

@@ -52,7 +52,6 @@ class DemoTable extends StatelessWidget {
         CustomTableCellData(
           text: employeeName,
           textColor: Colors.red,
-          textAlign: TextAlign.center,
         ),
         CustomTableCellData(text: department),
         CustomTableCellData(text: "${10000 + index * 100}"),

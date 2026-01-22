@@ -1,11 +1,11 @@
 name: report_data_table_2
 description: "A new Flutter package project."
-version: 0.0.1
+version: 0.0.2
 homepage:
 
 environment:
-  sdk: ^3.10.1
-  flutter: ">=1.17.0"
+  sdk: ">=3.4.0 <4.0.0"
+  flutter: ">=3.10.0"
 
 dependencies:
   flutter:

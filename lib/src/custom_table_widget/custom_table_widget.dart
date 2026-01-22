@@ -119,55 +119,102 @@ class _CustomTableWidgetState extends State<CustomTableWidget> {
 
   // ---------- UTILS ----------
   Widget _buildCell({
-    required double width,
-    required double height,
-    required Widget child,
-    Color? bg,
-    Border? border,
-  }) {
-    return Container(
-      width: width,
-      height: height,
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      decoration: BoxDecoration(
-        color: bg ?? Colors.transparent,
-        border: border ?? Border.all(color: Colors.grey.shade300, width: 0.5),
-      ),
-      child: child,
-    );
-  }
+  required double width,
+  required double height,
+  required Widget child,
+  Color? bg,
+  Border? border,
+  Alignment? alignment
+}) {
+  return Container(
+    width: width,
+    height: height,
+    padding: const EdgeInsets.symmetric(horizontal: 8),
+    alignment: alignment,
+    decoration: BoxDecoration(
+      color: bg ?? Colors.transparent,
+      border: border ?? Border.all(color: Colors.grey.shade300, width: 0.5),
+    ),
+    child: child,
+  );
+}
 
   Widget _cellFromData(int rowIndex, int colIndex) {
     final cell = widget.data.rows[rowIndex][colIndex];
-    if (cell.child != null) return cell.child!;
 
-    final key = '$rowIndex \_$colIndex';
+    // If cell has a custom widget, wrap it with alignment
+    if (cell.child != null) {
+      return Align(
+        alignment: cell.alignment ?? Alignment.center,
+        child: cell.child!,
+      );
+    }
+
+    final key = '$rowIndex\_$colIndex';
     if (cell.editable) {
       final controller = _editingControllers.putIfAbsent(
         key,
-        () => TextEditingController(text: cell.text ?? ''),
+            () => TextEditingController(text: cell.text ?? ''),
       );
+
       return TextField(
-        controller: controller,
-        textAlign: cell.textAlign,
+        controller: controller, //delete the alignment property from this.
         decoration: InputDecoration(
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4), // optional rounding
+            borderRadius: BorderRadius.circular(4),
             borderSide: const BorderSide(color: Colors.grey, width: 1),
           ),
           isDense: true,
+          contentPadding: cell.padding,
         ),
-
         style: TextStyle(color: cell.textColor),
       );
     }
 
-    return Text(
-      cell.text ?? '',
-      textAlign: cell.textAlign,
-      style: TextStyle(color: cell.textColor, fontSize: cell.fontSize),
+    // Regular text cell
+    return Align(
+      alignment: cell.alignment ?? Alignment.center,
+      child: Text(
+        cell.text ?? '',
+        style: TextStyle(
+          color: cell.textColor,
+          fontSize: cell.fontSize,
+        ),
+      ),
     );
   }
+
+  // Widget _cellFromData(int rowIndex, int colIndex) {
+  //   final cell = widget.data.rows[rowIndex][colIndex];
+  //   if (cell.child != null) return cell.child!;
+  //
+  //   final key = '$rowIndex \_$colIndex';
+  //   if (cell.editable) {
+  //     final controller = _editingControllers.putIfAbsent(
+  //       key,
+  //       () => TextEditingController(text: cell.text ?? ''),
+  //     );
+  //     return TextField(
+  //       controller: controller,
+  //       textAlign: cell.textAlign,
+  //       decoration: InputDecoration(
+  //         border: OutlineInputBorder(
+  //           borderRadius: BorderRadius.circular(4), // optional rounding
+  //           borderSide: const BorderSide(color: Colors.grey, width: 1),
+  //         ),
+  //         isDense: true,
+  //       ),
+  //
+  //       style: TextStyle(color: cell.textColor),
+  //     );
+  //   }
+  //
+  //   return Text(
+  //     cell.text ?? '',
+  //     textAlign: cell.textAlign,
+  //     style: TextStyle(color: cell.textColor, fontSize: cell.fontSize),
+  //   );
+  // }
 
   // ---------- HEADER BUILDERS ----------
   Widget _buildHeaderArea({required int fixed, required bool isLeft}) {
@@ -211,12 +258,11 @@ class _CustomTableWidgetState extends State<CustomTableWidget> {
               _buildCell(
                 width: totalWidth,
                 height: topHeight,
-                child: Center(
-                  child: Text(
-                    h.title,
-                    style: h.headerTextStyle ?? TextStyle(fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.center,
-                  ),
+                alignment: h.alignment,
+                child: Text(
+                  h.title,
+                  style: h.headerTextStyle ?? TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
                 ),
                 bg: h.headerBGColor ?? Colors.grey.shade100,
               ),
@@ -232,12 +278,11 @@ class _CustomTableWidgetState extends State<CustomTableWidget> {
                     return _buildCell(
                       width: c.width,
                       height: widget.subHeaderHeight,
-                      child: Center(
-                        child: Text(
-                          c.title,
-                          style: sub.subheaderTextStyle ?? TextStyle(fontWeight: FontWeight.w500),
-                          textAlign: TextAlign.center,
-                        ),
+                      alignment: sub.alignment,
+                      child: Text(
+                        c.title,
+                        style: sub.subheaderTextStyle ?? TextStyle(fontWeight: FontWeight.w500),
+                        textAlign: TextAlign.center,
                       ),
                       bg: sub.subheaderBGColor ?? h.headerBGColor,
                     );
@@ -261,6 +306,7 @@ class _CustomTableWidgetState extends State<CustomTableWidget> {
 
     final body = ListView.builder(
       controller: controller,
+      padding: EdgeInsets.zero,
       itemCount: widget.data.rows.length,
       itemBuilder: (_, rowIndex) {
         final row = widget.data.rows[rowIndex];
@@ -274,6 +320,7 @@ class _CustomTableWidgetState extends State<CustomTableWidget> {
               child: _cellFromData(rowIndex, colIndex),
               bg: cell.backgroundColor,
               border: cell.border,
+
             );
           }),
         );
