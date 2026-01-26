@@ -1,4 +1,3 @@
-library report_data_table_2;
 
 // Export all table related files
 export 'src/custom_table_widget/custom_table_widget.dart';

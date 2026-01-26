@@ -1,7 +1,9 @@
 name: report_data_table_2
 description: "A new Flutter package project."
 version: 0.0.2
-homepage:
+homepage: https://github.com/Fahad-mia/report_data_table_2
+repository: https://github.com/Fahad-mia/report_data_table_2
+
 
 environment:
   sdk: ">=3.4.0 <4.0.0"
