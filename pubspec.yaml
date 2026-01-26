@@ -1,6 +1,6 @@
 name: report_data_table_2
 description: "A highly customizable Flutter data table for report-style layouts with fixed columns, multi-level headers, editable cells, and scroll synchronization"
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/Fahad-mia/report_data_table_2
 repository: https://github.com/Fahad-mia/report_data_table_2
 
