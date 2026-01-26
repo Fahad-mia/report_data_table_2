@@ -1,39 +1,132 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# report_data_table_2
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
+A powerful and highly customizable Flutter data table widget built for **report-style layouts**,
+featuring **fixed columns**, **multi-level headers**, **editable cells**, and **synchronized
+scrolling**.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
+This package is ideal for enterprise dashboards, MIS reports, analytics tables, and complex data
+presentation where Flutter’s default `DataTable` is not enough.
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+---
 
-## Features
+## ✨ Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- 📌 Fixed (frozen) columns support
+- 🧱 Multi-level headers with optional sub-headers
+- ↔️ Horizontal & vertical scroll synchronization
+- ✏️ Editable cells with built-in `TextField`
+- 🎨 Per-cell customization
+    - Background color
+    - Text color & font size
+    - Alignment
+    - Border
+- 🧩 Custom widget support inside cells
+- 📐 Fully configurable layout
+    - Header height
+    - Sub-header height
+    - Row height
+    - Column width
+    - Table height
 
-## Getting started
+---
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+## 📦 Installation
+
+Add this dependency to your `pubspec.yaml`:
+
+```yaml
+dependencies:
+  report_data_table_2: ^1.0.0
+  ```
+
+then run
+**flutter pub get**
+
+## Getting Started
+
+```dart
+   import 'package:report_data_table_2/report_data_table_2.dart';
+   ```
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
+### Define headers
 
 ```dart
-const like = 'sample';
+
+final headers = [
+  Header(
+    title: "Employee Name",
+    width: 150,
+    headerTextStyle: GoogleFonts.poppins(
+      fontSize: TextFontSize.footnote,
+      fontWeight: FontWeight.w500,
+      color: AppColors.primaryBlue,
+    ),
+    headerBGColor: AppColors.whiteColor,
+    alignment: Alignment.center,
+  ),
+  Header(
+    title: "Employee Info",
+    headerBGColor: Colors.white,
+    headerTextStyle: TextStyle(color: Colors.red, fontSize: 20),
+    subHeaders: [
+      //   SubHeader(title: "Name", width: 80),
+      SubHeader(title: "Others",
+          width: 120,
+          subheaderTextStyle: TextStyle(color: Colors.green, fontSize: 20)),
+    ],
+  )
+];
+
 ```
 
-## Additional information
+## Build the table rows.
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+```dart
+
+final rows = [
+  [
+    CustomTableCellData(
+      child: InkWell(
+        onTap: () async {
+        },
+        child: Text(e.employeeCode.toString()),
+      ),
+      textColor: AppColors.blackColor,
+      fontSize: TextFontSize.body,
+      backgroundColor: AppColors.lightLavender,
+      alignment: Alignment.center,
+      border: Border.all(width: .9, color: AppColors.whiteColor),
+    ),
+    CustomTableCellData(text: 'John Doe'),
+  ],
+];
+```
+## Build Table.
+
+```dart
+@override
+Widget build(BuildContext context) {
+  final completeTable = TableData(
+    headers: leaveListHeader,
+    rows: tableRows,
+  );
+
+  return CustomTableWidget(
+    data: completeTable,
+    fixedColumns: 1,
+    headerHeight: 40,
+    subHeaderHeight: 0,    rowHeight: 50,
+    defaultColumnWidth: 120,
+    tableHeight: tableHeight,
+  );
+}
+```
+
+```Image```
+![App Screenshot](assets/images/leavelist.png)
+
+## License
+
+MIT License

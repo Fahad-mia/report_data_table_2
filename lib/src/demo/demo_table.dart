@@ -40,7 +40,7 @@ class DemoTable extends StatelessWidget {
 
     // Step 2: Generate 20 rows dynamically
     final List<List<CustomTableCellData>> rows = List.generate(20, (index) {
-      final isActive = index % 2 == 0;
+      // final isActive = index % 2 == 0;
       final employeeName = "Employee ${index + 1}";
       final department = index % 3 == 0
           ? "Sales"
