@@ -125,7 +125,7 @@ Widget build(BuildContext context) {
 ```
 
 ```Image```
-![App Screenshot](https://github.com/Fahad-mia/report_data_table_2/blob/master/assets/images/leavelist.png)
+![App Screenshot](https://raw.githubusercontent.com/Fahad-mia/report_data_table_2/refs/heads/master/assets/images/leavelist.png)
 
 ## License
 
