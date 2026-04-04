@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:report_data_table_2/src/custom_chart/custom_bar_chart/model/custom_bar_data.dart';
-import 'package:report_data_table_2/src/custom_chart/custom_bar_chart/pages/custom_bar_chart.dart';
+import 'package:report_data_table_2/src/custom_chart/custom_bar_chart/widget/custom_bar_chart.dart';
 
 class DemoBarChart extends StatelessWidget {
   const DemoBarChart({super.key});
@@ -50,10 +50,10 @@ class DemoBarChart extends StatelessWidget {
                   ],
                 ),
                 child: CustomBarChart(
-                  data: chartData, // Even if this list has 50 items, it won't crash/overflow
+                  data: chartData,
                   height: 200,
                   barWidth: 45,
-                  barGap: 1, // Adjust space between bars here
+                  barGap: 1,
                   borderRadius: 15,
                   axisColor: Colors.greenAccent,
                   labelStyle: const TextStyle(
