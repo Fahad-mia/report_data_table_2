@@ -9,13 +9,20 @@ class DemoLineChart extends StatelessWidget {
   Widget build(BuildContext context) {
     // Step 1: Prepare the data points
     final lineData = [
-      CustomLineDataModel(label: "Mon", value: 20),
-      CustomLineDataModel(label: "Tue", value: 50),
-      CustomLineDataModel(label: "Wed", value: 40),
-      CustomLineDataModel(label: "Thu", value: 80),
-      CustomLineDataModel(label: "Fri", value: 60),
-      CustomLineDataModel(label: "Sat", value: 90),
-      CustomLineDataModel(label: "Sun", value: 70),
+      CustomLineDataModel(label: "Mon", value: 20, color: Colors.greenAccent),
+      CustomLineDataModel(label: "Tue", value: 50, color: Colors.lightGreen),
+      CustomLineDataModel(label: "Wed", value: 40, color: Colors.blue),
+      CustomLineDataModel(label: "Thu", value: 80, color: Colors.black),
+      CustomLineDataModel(label: "Fri", value: 60, color: Colors.green),
+      CustomLineDataModel(label: "Sat", value: 90, color: Colors.teal),
+      CustomLineDataModel(label: "Sun", value: 70, color: Colors.red),
+      CustomLineDataModel(label: "Mon", value: 20, color: Colors.greenAccent),
+      CustomLineDataModel(label: "Tue", value: 50, color: Colors.lightGreen),
+      CustomLineDataModel(label: "Wed", value: 40, color: Colors.blue),
+      CustomLineDataModel(label: "Thu", value: 80, color: Colors.black),
+      CustomLineDataModel(label: "Fri", value: 60, color: Colors.green),
+      CustomLineDataModel(label: "Sat", value: 20, color: Colors.teal),
+      CustomLineDataModel(label: "Sun", value: 70, color: Colors.red),
     ];
 
     return Scaffold(
