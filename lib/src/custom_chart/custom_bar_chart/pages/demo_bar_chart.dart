@@ -43,16 +43,17 @@ class DemoBarChart extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.05),
+                      color: Colors.black.withValues(alpha: 0.05),
                       blurRadius: 10,
                       spreadRadius: 5,
                     ),
                   ],
                 ),
                 child: CustomBarChart(
-                  data: chartData,
+                  data: chartData, // Even if this list has 50 items, it won't crash/overflow
                   height: 200,
                   barWidth: 45,
+                  barGap: 1, // Adjust space between bars here
                   borderRadius: 15,
                   axisColor: Colors.greenAccent,
                   labelStyle: const TextStyle(
