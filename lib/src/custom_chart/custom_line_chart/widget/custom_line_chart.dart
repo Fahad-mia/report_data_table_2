@@ -4,6 +4,7 @@ import 'package:report_data_table_2/report_data_table_2.dart';
 class CustomLineChart extends StatefulWidget {
   final List<CustomLineDataModel> data;
   final double height;
+  final double? chartWidth; // NEW: Optional fixed width
   final double pointSpacing;
   final Color lineColor;
   final double lineWidth;
@@ -16,6 +17,7 @@ class CustomLineChart extends StatefulWidget {
     super.key,
     required this.data,
     this.height = 300,
+    this.chartWidth, // Initialize here
     this.pointSpacing = 60,
     this.lineColor = Colors.blue,
     this.lineWidth = 2.0,
@@ -34,46 +36,55 @@ class _CustomLineChartState extends State<CustomLineChart> {
 
   @override
   Widget build(BuildContext context) {
-    // --- NEW: Calculate both Max and Min Values ---
-    double maxValue = widget.data.map((e) => e.value).fold(0.0, (prev, e) => e > prev ? e : prev);
-    double minValue = widget.data.map((e) => e.value).fold(0.0, (prev, e) => e < prev ? e : prev);
+    // 1. DATA BOUNDS (Fixes the undefined name errors)
+    final values = widget.data.map((e) => e.value).toList();
 
-    // Ensure the chart at least spans a visible range if all values are 0
+    // Using fold to handle the list safely
+    double maxValue = values.fold(0.0, (prev, e) => e > prev ? e : prev);
+    double minValue = values.fold(0.0, (prev, e) => e < prev ? e : prev);
+
     if (maxValue == minValue) {
       maxValue += 1;
       minValue -= 1;
     }
-
     final double valueRange = maxValue - minValue;
 
+    // 2. UI DIMENSIONS
     const double yAxisWidth = 50.0;
-    const double bottomLabelHeight = 30.0;
-    const double horizontalPadding = 20.0;
+    const double labelSpace = 30.0;
+    const double sidePadding = 20.0;
+    const double topPadding = 45.0;
+    const double bottomPadding = 15.0;
 
-    const double topChartPadding = 45.0;
-    const double bottomChartPadding = 15.0;
+    // 3. CHART HEIGHT CALCULATIONS
+    final double totalAreaHeight = widget.height - labelSpace - 20;
+    final double actualDrawingHeight = totalAreaHeight - topPadding - bottomPadding;
 
-    final double chartDrawingHeight = widget.height - bottomLabelHeight - 20;
-    final double actualChartHeight = chartDrawingHeight - topChartPadding - bottomChartPadding;
+    // 4. CHART WIDTH CALCULATIONS
+    // Use widget.chartWidth if provided, otherwise calculate based on spacing
+    final double contentWidth = widget.chartWidth ?? (widget.pointSpacing * (widget.data.length - 1));
 
-    final double chartContentWidth = widget.pointSpacing * (widget.data.length - 1);
-    final double totalScrollWidth = chartContentWidth + (horizontalPadding * 2);
+    // effectiveSpacing is used to find exactly where dots go on the X-axis
+    final double effectiveSpacing = widget.chartWidth != null
+        ? (contentWidth / (widget.data.length - 1))
+        : widget.pointSpacing;
+
+    final double totalScrollWidth = contentWidth + (sidePadding * 2);
 
     return SizedBox(
       height: widget.height,
       child: Row(
         children: [
-          // 1. FIXED Y-AXIS
+          // --- 1. FIXED Y-AXIS ---
           Container(
             width: yAxisWidth,
-            height: chartDrawingHeight,
-            margin: const EdgeInsets.only(bottom: bottomLabelHeight + 20),
-            padding: const EdgeInsets.only(top: topChartPadding, bottom: bottomChartPadding),
+            height: totalAreaHeight,
+            margin: const EdgeInsets.only(bottom: labelSpace + 20),
+            padding: const EdgeInsets.only(top: topPadding, bottom: bottomPadding),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: List.generate(widget.yAxisDivisions + 1, (index) {
-                // --- NEW: Calculate Y-Axis label relative to min and max ---
                 double val = maxValue - (index * (valueRange / widget.yAxisDivisions));
                 return Padding(
                   padding: const EdgeInsets.only(right: 8.0),
@@ -84,7 +95,7 @@ class _CustomLineChartState extends State<CustomLineChart> {
             ),
           ),
 
-          // 2. SCROLLABLE CHART
+          // --- 2. SCROLLABLE CHART ---
           Expanded(
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
@@ -93,21 +104,21 @@ class _CustomLineChartState extends State<CustomLineChart> {
                 children: [
                   GestureDetector(
                     onTapDown: (details) {
-                      final double localX = details.localPosition.dx - horizontalPadding;
-                      int index = (localX / widget.pointSpacing).round();
+                      final double localX = details.localPosition.dx - sidePadding;
+                      int index = (localX / effectiveSpacing).round();
                       if (index >= 0 && index < widget.data.length) {
                         setState(() => _selectedIndex = (_selectedIndex == index ? null : index));
                       }
                     },
                     child: Container(
-                      height: chartDrawingHeight,
+                      height: totalAreaHeight,
                       width: totalScrollWidth,
                       color: Colors.transparent,
-                      padding: const EdgeInsets.only(
-                        left: horizontalPadding,
-                        right: horizontalPadding,
-                        top: topChartPadding,
-                        bottom: bottomChartPadding,
+                      padding: EdgeInsets.only(
+                        left: sidePadding,
+                        right: sidePadding,
+                        top: topPadding,
+                        bottom: bottomPadding,
                       ),
                       child: Stack(
                         clipBehavior: Clip.none,
@@ -119,14 +130,14 @@ class _CustomLineChartState extends State<CustomLineChart> {
                                 widget.yAxisDivisions + 1,
                                     (i) => Container(
                                     height: 0.5,
-                                    width: chartContentWidth,
+                                    width: contentWidth,
                                     color: widget.axisColor.withOpacity(0.2))),
                           ),
 
                           // Vertical Indicator Bar
                           if (_selectedIndex != null)
                             Positioned(
-                              left: _selectedIndex! * widget.pointSpacing,
+                              left: _selectedIndex! * effectiveSpacing,
                               top: 0,
                               bottom: 0,
                               child: Container(
@@ -136,11 +147,11 @@ class _CustomLineChartState extends State<CustomLineChart> {
 
                           // The Line Painter
                           CustomPaint(
-                            size: Size(chartContentWidth, actualChartHeight),
+                            size: Size(contentWidth, actualDrawingHeight),
                             painter: LineDrawerHelper(
                               data: widget.data,
                               maxValue: maxValue,
-                              minValue: minValue, // Passed new minValue
+                              minValue: minValue,
                               lineColor: widget.lineColor,
                               lineWidth: widget.lineWidth,
                               showDots: widget.showDots,
@@ -151,49 +162,35 @@ class _CustomLineChartState extends State<CustomLineChart> {
                           // Value Tooltip
                           if (_selectedIndex != null)
                             Positioned(
-                              left: (_selectedIndex! * widget.pointSpacing) - 20,
-                              // --- NEW: Calculate tooltip top relative to range ---
-                              top: (1 - ((widget.data[_selectedIndex!].value - minValue) / valueRange)) * actualChartHeight - 35,
-                              child: Container(
-                                padding: const EdgeInsets.all(4),
-                                decoration: BoxDecoration(
-                                  color: widget.data[_selectedIndex!].color ?? widget.lineColor,
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: Text(
-                                  widget.data[_selectedIndex!].value.toStringAsFixed(0),
-                                  style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
+                              left: (_selectedIndex! * effectiveSpacing) - 20,
+                              top: (1 - ((widget.data[_selectedIndex!].value - minValue) / valueRange)) * actualDrawingHeight - 35,
+                              child: _buildTooltip(),
                             ),
                         ],
                       ),
                     ),
                   ),
 
-                  // Horizontal Axis & Labels
+                  // Horizontal Axis Labels
                   const SizedBox(height: 10),
                   Container(
-                    margin: const EdgeInsets.symmetric(horizontal: horizontalPadding),
+                    margin: const EdgeInsets.symmetric(horizontal: sidePadding),
                     height: 1,
-                    width: chartContentWidth,
+                    width: contentWidth,
                     color: widget.axisColor,
                   ),
                   const SizedBox(height: 5),
                   SizedBox(
                     width: totalScrollWidth,
-                    height: bottomLabelHeight,
+                    height: labelSpace,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: horizontalPadding),
+                      padding: const EdgeInsets.symmetric(horizontal: sidePadding),
                       child: Stack(
                         clipBehavior: Clip.none,
                         children: List.generate(widget.data.length, (index) {
                           return Positioned(
-                            left: (index * widget.pointSpacing) - (widget.pointSpacing / 2),
-                            width: widget.pointSpacing,
+                            left: (index * effectiveSpacing) - (effectiveSpacing / 2),
+                            width: effectiveSpacing,
                             child: Text(
                               widget.data[index].label,
                               style: widget.labelStyle?.copyWith(
@@ -213,6 +210,20 @@ class _CustomLineChartState extends State<CustomLineChart> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildTooltip() {
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: widget.data[_selectedIndex!].color ?? widget.lineColor,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(
+        widget.data[_selectedIndex!].value.toStringAsFixed(0),
+        style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold),
       ),
     );
   }

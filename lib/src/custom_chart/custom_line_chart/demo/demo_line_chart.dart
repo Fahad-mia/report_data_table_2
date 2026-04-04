@@ -39,23 +39,16 @@ class DemoLineChart extends StatelessWidget {
             const SizedBox(height: 30),
 
             // Step 2: Implementation
-            Container(
-              padding: const EdgeInsets.symmetric(vertical: 20),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(15),
-                border: Border.all(color: Colors.grey.shade200),
-              ),
-              child: CustomLineChart(
-                data: lineData,
-                height: 250,
-                pointSpacing: 70,       // Space between each day
-                lineColor: Colors.blue, // The "Paint" color
-                lineWidth: 3.0,         // Thickness of the line
-                showDots: true,         // Show circles at data points
-                axisColor: Colors.black12,
-                labelStyle: const TextStyle(fontSize: 12, color: Colors.grey),
-              ),
+            CustomLineChart(
+              data: lineData,
+              height: 250,
+              chartWidth: 399,
+              pointSpacing: 70,       // Space between each day
+              lineColor: Colors.redAccent, // The "Paint" color
+              lineWidth: 3.0,         // Thickness of the line
+              showDots: true,         // Show circles at data points
+              axisColor: Colors.black12,
+              labelStyle: const TextStyle(fontSize: 12, color: Colors.grey),
             ),
           ],
         ),
