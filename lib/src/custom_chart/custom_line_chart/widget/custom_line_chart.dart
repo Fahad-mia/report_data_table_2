@@ -54,7 +54,7 @@ class _CustomLineChartState extends State<CustomLineChart> {
     const double labelSpace = 30.0;
     const double sidePadding = 20.0;
     const double topPadding = 45.0;
-    const double bottomPadding = 15.0;
+    const double bottomPadding = 10.0;
 
     // 3. CHART HEIGHT CALCULATIONS
     final double totalAreaHeight = widget.height - labelSpace - 20;

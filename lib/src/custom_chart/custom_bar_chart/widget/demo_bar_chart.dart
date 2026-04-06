@@ -53,8 +53,9 @@ class DemoBarChart extends StatelessWidget {
                   data: chartData,
                   height: 200,
                   barWidth: 45,
-                  barGap: 1,
+                  barGap: 20,
                   borderRadius: 15,
+                  isInteractive: false,
                   axisColor: Colors.greenAccent,
                   labelStyle: const TextStyle(
                     color: Colors.black87,
