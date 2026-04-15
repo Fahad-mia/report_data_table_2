@@ -56,6 +56,8 @@ class DemoGroupBarChart extends StatelessWidget {
                   data: advancedChartData,
                   showDots: true,
                   showLine: true,
+                  firstBarText: "Current Year",
+                  secondBarText: "Previous Year",
                   targetColor: const Color(0xFFFFC000),
                   actualColor: const Color(0xFF00B050),
                   percentColor: const Color(0xFF4472C4),

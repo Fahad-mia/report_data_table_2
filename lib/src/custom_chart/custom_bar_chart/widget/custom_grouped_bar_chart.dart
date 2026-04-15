@@ -10,13 +10,15 @@ class CustomGroupedBarChart extends StatelessWidget {
   final int primaryAxisSteps;
   final double maxSecondaryValue;
   final int secondaryAxisSteps;
+  String? firstBarText;
+  String? secondBarText;
   final bool showDots;
   final bool showLine;
   final Color targetColor;
   final Color actualColor;
   final Color percentColor;
 
-  const CustomGroupedBarChart({
+  CustomGroupedBarChart({
     super.key,
     required this.data,
     this.height = 350,
@@ -29,6 +31,8 @@ class CustomGroupedBarChart extends StatelessWidget {
     this.targetColor = const Color(0xFFFFC000),
     this.actualColor = const Color(0xFF00B050),
     this.percentColor = const Color(0xFF4472C4),
+    this.firstBarText,
+    this.secondBarText
   });
 
   @override
@@ -92,9 +96,9 @@ class CustomGroupedBarChart extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _LegendItem(color: targetColor, text: "Target"),
+        _LegendItem(color: targetColor, text: firstBarText ?? "Target"),
         const SizedBox(width: 16),
-        _LegendItem(color: actualColor, text: "Actual"),
+        _LegendItem(color: actualColor, text: secondBarText ?? "Actual"),
         if (showDots) ...[
           const SizedBox(width: 16),
           _LegendItem(color: percentColor, text: "%", isPercent: true),
