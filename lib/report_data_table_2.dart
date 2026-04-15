@@ -16,4 +16,8 @@ export 'src/custom_chart/custom_bar_chart/model/custom_bar_data.dart';
 export 'src/custom_chart/custom_line_chart/model/custom_line_data_model.dart';
 export 'src/custom_chart/custom_line_chart/widget/line_drawer_helper.dart';
 
+/// this is for custom grouped bar chart
+export 'src/custom_chart/custom_bar_chart/widget/custom_grouped_bar_chart.dart';
+export 'src/custom_chart/custom_bar_chart/model/grouped_bar_data.dart';
+
 

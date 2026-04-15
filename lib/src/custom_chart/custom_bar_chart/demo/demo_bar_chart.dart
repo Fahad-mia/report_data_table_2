@@ -1,26 +1,49 @@
 import 'package:flutter/material.dart';
-import 'package:report_data_table_2/src/custom_chart/custom_bar_chart/model/custom_bar_data.dart';
-import 'package:report_data_table_2/src/custom_chart/custom_bar_chart/widget/custom_bar_chart.dart';
+import 'package:report_data_table_2/report_data_table_2.dart';
 
-class DemoBarChart extends StatelessWidget {
+class DemoBarChart extends StatefulWidget {
   const DemoBarChart({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    // Step 1: Prepare user-defined data
-    final chartData = [
-      CustomBarData(label: "Jan", value: 45, color: Colors.blueAccent),
-      CustomBarData(label: "Feb", value: 90, color: Colors.redAccent),
-      CustomBarData(label: "Mar", value: 65, color: Colors.orangeAccent),
-      CustomBarData(label: "Apr", value: 120, color: Colors.greenAccent),
-      CustomBarData(label: "May", value: 80, color: Colors.purpleAccent),
-      CustomBarData(label: "Jun", value: 30, color: Colors.tealAccent),
-      CustomBarData(label: "Mar", value: 65, color: Colors.orangeAccent),
-      CustomBarData(label: "Apr", value: 120, color: Colors.greenAccent),
-      CustomBarData(label: "May", value: 80, color: Colors.purpleAccent),
-      CustomBarData(label: "Jun", value: 30, color: Colors.tealAccent),
-    ];
+  State<DemoBarChart> createState() => _DemoBarChartState();
+}
 
+class _DemoBarChartState extends State<DemoBarChart> {
+  final List<CustomBarData> chartData = [
+    CustomBarData(
+      label: 'Jan',
+      value: 450,
+      color: Colors.blue.shade300,
+    ),
+    CustomBarData(
+      label: 'Feb',
+      value: 620,
+      color: Colors.blue.shade300,
+    ),
+    CustomBarData(
+      label: 'Mar',
+      value: 890,
+      color: Colors.blue.shade600, // Highlighted peak month
+    ),
+    CustomBarData(
+      label: 'Apr',
+      value: 550,
+      color: Colors.blue.shade300,
+    ),
+    CustomBarData(
+      label: 'May',
+      value: 710,
+      color: Colors.blue.shade300,
+    ),
+    CustomBarData(
+      label: 'Jun',
+      value: 480,
+      color: Colors.blue.shade300,
+    ),
+  ];
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text("Custom Bar Chart Demo")),
       body: SingleChildScrollView(
