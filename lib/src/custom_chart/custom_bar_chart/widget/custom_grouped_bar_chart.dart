@@ -4,42 +4,43 @@ import 'package:flutter/material.dart';
 import 'package:report_data_table_2/src/custom_chart/custom_bar_chart/model/grouped_bar_data.dart';
 
 class CustomGroupedBarChart extends StatelessWidget {
+  final double groupWidth;
   final List<GroupedBarData> data;
   final double height;
   final double maxPrimaryValue;
   final int primaryAxisSteps;
   final double maxSecondaryValue;
   final int secondaryAxisSteps;
-  String? firstBarText;
-  String? secondBarText;
+  final String? firstBarText;
+  final String? secondBarText;
   final bool showDots;
   final bool showLine;
   final Color targetColor;
   final Color actualColor;
   final Color percentColor;
 
-  CustomGroupedBarChart({
-    super.key,
-    required this.data,
-    this.height = 350,
-    this.maxPrimaryValue = 350,
-    this.primaryAxisSteps = 8,
-    this.maxSecondaryValue = 120,
-    this.secondaryAxisSteps = 7,
-    this.showDots = true, // Default to showing dots
-    this.showLine = true,
-    this.targetColor = const Color(0xFFFFC000),
-    this.actualColor = const Color(0xFF00B050),
-    this.percentColor = const Color(0xFF4472C4),
-    this.firstBarText,
-    this.secondBarText
-  });
+  const CustomGroupedBarChart(
+      {super.key,
+      this.groupWidth = 95.0,
+      required this.data,
+      this.height = 350,
+      this.maxPrimaryValue = 350,
+      this.primaryAxisSteps = 8,
+      this.maxSecondaryValue = 120,
+      this.secondaryAxisSteps = 7,
+      this.showDots = true, // Default to showing dots
+      this.showLine = true,
+      this.targetColor = const Color(0xFFFFC000),
+      this.actualColor = const Color(0xFF00B050),
+      this.percentColor = const Color(0xFF4472C4),
+      this.firstBarText,
+      this.secondBarText});
 
   @override
   Widget build(BuildContext context) {
     // 40px reserved for X-axis labels at the bottom
     double gridAreaHeight = height - 40;
-    const double groupWidth = 95.0;
+
 
     return SizedBox(
         height: height + 50, // Added 50px for top Legend spacing
@@ -81,8 +82,6 @@ class CustomGroupedBarChart extends StatelessWidget {
                           ],
                         ),
                       ),
-                      const SizedBox(width: 8),
-                      // _buildRightAxis(gridAreaHeight),
                     ],
                   ),
                 ),
@@ -172,7 +171,7 @@ class CustomGroupedBarChart extends StatelessWidget {
     final Color currentDotColor = item.dotColor ?? percentColor;
 
     return SizedBox(
-      width: 95,
+      width: groupWidth,
       child: Column(
         children: [
           SizedBox(

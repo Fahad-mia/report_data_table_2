@@ -54,6 +54,7 @@ class DemoGroupBarChart extends StatelessWidget {
                 ),
                 child: CustomGroupedBarChart(
                   data: advancedChartData,
+                  groupWidth: 80,
                   showDots: true,
                   showLine: true,
                   firstBarText: "Current Year",
@@ -61,7 +62,6 @@ class DemoGroupBarChart extends StatelessWidget {
                   targetColor: const Color(0xFFFFC000),
                   actualColor: const Color(0xFF00B050),
                   percentColor: const Color(0xFF4472C4),
-
                   height: 350,
                   maxPrimaryValue: 350,
                   maxSecondaryValue: 120,
