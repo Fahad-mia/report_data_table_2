@@ -41,7 +41,6 @@ class CustomGroupedBarChart extends StatelessWidget {
     // 40px reserved for X-axis labels at the bottom
     double gridAreaHeight = height - 40;
 
-
     return SizedBox(
         height: height + 50, // Added 50px for top Legend spacing
         child: Column(children: [
@@ -197,9 +196,15 @@ class CustomGroupedBarChart extends StatelessWidget {
                               fontSize: 10, color: Colors.grey.shade700)),
                       const SizedBox(height: 4),
                       Container(
-                          width: 28,
-                          height: targetHeight.clamp(0.0, double.infinity),
-                          color: currentTargetColor),
+                        width: 28,
+                        decoration: BoxDecoration(
+                          color: currentTargetColor,
+                          borderRadius: BorderRadius.only(
+                              topLeft: Radius.circular(4),
+                              topRight: Radius.circular(4)),
+                        ),
+                        height: targetHeight.clamp(0.0, double.infinity),
+                      )
                     ],
                   ),
                 ),
@@ -215,9 +220,14 @@ class CustomGroupedBarChart extends StatelessWidget {
                               fontSize: 10, color: Colors.grey.shade700)),
                       const SizedBox(height: 4),
                       Container(
-                          width: 28,
-                          height: actualHeight.clamp(0.0, double.infinity),
-                          color: currentActualColor),
+                        width: 28,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(4),
+                                topRight: Radius.circular(4)),
+                            color: currentActualColor),
+                        height: actualHeight.clamp(0.0, double.infinity),
+                      ),
                     ],
                   ),
                 ),
