@@ -6,6 +6,7 @@ class TaperedNeedleMeter extends StatelessWidget {
   final double minValue;
   final double maxValue;
   final String label;
+  final bool isShowingInnerLine;
 
   // Style Properties
   final double arcRadius;
@@ -29,6 +30,9 @@ class TaperedNeedleMeter extends StatelessWidget {
     this.needleColor = const Color(0xFF424242),
     this.labelFontSize = 14,
     this.valueFontSize = 16,
+    this.isShowingInnerLine = true
+
+
   });
 
   @override
@@ -41,17 +45,18 @@ class TaperedNeedleMeter extends StatelessWidget {
       height: totalSize + 40, // Extra height for the bottom label
       child: CustomPaint(
         painter: TaperedNeedleMeterPainter(
-          value: value,
-          min: minValue,
-          max: maxValue,
-          label: label,
-          arcRadius: arcRadius,
-          arcWidth: arcWidth,
-          activeGradient: activeGradient,
-          bgArcColor: backgroundArcColor,
-          needleColor: needleColor,
-          labelFontSize: labelFontSize,
-          valueSize: valueFontSize,
+            value: value,
+            min: minValue,
+            max: maxValue,
+            label: label,
+            arcRadius: arcRadius,
+            arcWidth: arcWidth,
+            activeGradient: activeGradient,
+            bgArcColor: backgroundArcColor,
+            needleColor: needleColor,
+            labelFontSize: labelFontSize,
+            valueSize: valueFontSize,
+            isShowingInnerLine: isShowingInnerLine!
         ),
       ),
     );

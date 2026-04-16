@@ -15,6 +15,7 @@ class TaperedNeedleMeterPainter extends CustomPainter {
   final double labelFontSize;
   final TextStyle? labelTextStyle;
   final double valueSize;
+  final bool isShowingInnerLine;
 
   TaperedNeedleMeterPainter({
     required this.value,
@@ -29,8 +30,8 @@ class TaperedNeedleMeterPainter extends CustomPainter {
     required this.labelFontSize,
     this.labelTextStyle,
     required this.valueSize,
+    this.isShowingInnerLine = true,
   });
-
   @override
   void paint(Canvas canvas, Size size) {
     final center = Offset(size.width / 2, size.width / 2);
@@ -39,7 +40,7 @@ class TaperedNeedleMeterPainter extends CustomPainter {
 
     // Normalize value to 0.0 - 1.0 based on min/max range
     final double normalizedValue =
-        ((value - min) / (max - min)).clamp(0.0, 1.0);
+    ((value - min) / (max - min)).clamp(0.0, 1.0);
     final currentAngle = startAngle + (normalizedValue * sweepAngle);
 
     // 1. Draw Background Arc
@@ -57,25 +58,27 @@ class TaperedNeedleMeterPainter extends CustomPainter {
       bgPaint,
     );
 
-    // 2. Draw Dotted Inner Line
-    final dottedPaint = Paint()
-      ..color = Colors.grey.withOpacity(0.3)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.2;
 
-    final dottedRadius = arcRadius - arcWidth - 5;
-    const int dashCount = 50;
-    for (int i = 0; i < dashCount; i++) {
-      double angle = startAngle + (i / dashCount) * sweepAngle;
-      canvas.drawArc(
-        Rect.fromCircle(center: center, radius: dottedRadius),
-        angle,
-        (sweepAngle / dashCount) * 0.4, // Dash length
-        false,
-        dottedPaint,
-      );
+// 2. Draw Dotted Inner Line (Condition Added Here)
+    if (isShowingInnerLine) {
+      final dottedPaint = Paint()
+        ..color = Colors.grey.withOpacity(0.3)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.2;
+
+      final dottedRadius = arcRadius - arcWidth - 5;
+      const int dashCount = 50;
+      for (int i = 0; i < dashCount; i++) {
+        double angle = startAngle + (i / dashCount) * sweepAngle;
+        canvas.drawArc(
+          Rect.fromCircle(center: center, radius: dottedRadius),
+          angle,
+          (sweepAngle / dashCount) * 0.4, // Dash length
+          false,
+          dottedPaint,
+        );
+      }
     }
-
     // 3. Draw Active Gradient Arc
     final rect = Rect.fromCircle(center: center, radius: arcRadius);
     final activePaint = Paint()
@@ -182,9 +185,9 @@ class TaperedNeedleMeterPainter extends CustomPainter {
 
   void _drawText(
       {required Canvas canvas,
-      required String text,
-      required TextStyle style,
-      required Offset centerOffset}) {
+        required String text,
+        required TextStyle style,
+        required Offset centerOffset}) {
     final textPainter = TextPainter(
       text: TextSpan(text: text, style: style),
       textDirection: TextDirection.ltr,
