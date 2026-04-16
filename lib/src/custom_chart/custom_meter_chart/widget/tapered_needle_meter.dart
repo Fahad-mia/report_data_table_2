@@ -39,15 +39,17 @@ class TaperedNeedleMeter extends StatelessWidget {
   Widget build(BuildContext context) {
     // We calculate the widget size based on the arcRadius to keep it responsive
     final totalSize = (arcRadius + arcWidth) * 2;
-
-    return SizedBox(
-      width: totalSize,
-      height: totalSize + 40, // Extra height for the bottom label
-      child: CustomPaint(
-        painter: TaperedNeedleMeterPainter(
-            value: value,
-            min: minValue,
-            max: maxValue,
+    return TweenAnimationBuilder<double>(
+      // Animates from 0 to the target value
+      tween: Tween<double>(begin: 0, end: value),
+      duration: const Duration(milliseconds: 1500), // Adjust speed here
+      curve: Curves.easeOutQuart, // Makes the needle "settle" smoothly
+      builder: (context, animatedValue, child) {
+        return CustomPaint(
+          painter: TaperedNeedleMeterPainter(
+            value: animatedValue, // Use the interpolated value
+            min: 0,
+            max: 100,
             label: label,
             arcRadius: arcRadius,
             arcWidth: arcWidth,
@@ -55,10 +57,31 @@ class TaperedNeedleMeter extends StatelessWidget {
             bgArcColor: backgroundArcColor,
             needleColor: needleColor,
             labelFontSize: labelFontSize,
-            valueSize: valueFontSize,
-            isShowingInnerLine: isShowingInnerLine!
-        ),
-      ),
+            valueSize: 12,
+            isShowingInnerLine: isShowingInnerLine,
+          ),
+        );
+      },
     );
+    // return SizedBox(
+    //   width: totalSize,
+    //   height: totalSize + 40, // Extra height for the bottom label
+    //   child: CustomPaint(
+    //     painter: TaperedNeedleMeterPainter(
+    //         value: value,
+    //         min: minValue,
+    //         max: maxValue,
+    //         label: label,
+    //         arcRadius: arcRadius,
+    //         arcWidth: arcWidth,
+    //         activeGradient: activeGradient,
+    //         bgArcColor: backgroundArcColor,
+    //         needleColor: needleColor,
+    //         labelFontSize: labelFontSize,
+    //         valueSize: valueFontSize,
+    //         isShowingInnerLine: isShowingInnerLine!
+    //     ),
+    //   ),
+    // );
   }
 }
