@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:report_data_table_2/src/custom_chart/custom_bar_chart/demo/demo_bar_chart.dart';
 import 'package:report_data_table_2/src/custom_chart/custom_bar_chart/demo/demo_group_bar_chart.dart';
 import 'package:report_data_table_2/src/custom_chart/custom_line_chart/demo/demo_line_chart.dart';
+import 'package:report_data_table_2/src/custom_chart/custom_pie_chart/demo/demo_arc_chart.dart';
 import 'package:report_data_table_2/src/demo/demo_table.dart'; // your package export
 
 void main() => runApp(const DemoApp());
@@ -18,8 +19,9 @@ class DemoApp extends StatelessWidget {
         appBar: AppBar(title: const Text("Report Table Demo")),
         body: const Padding(
           padding: EdgeInsets.all(16.0),
-          child: DemoGroupBarChart(), // your demo widget
+          child: DemoArcChart(), // your demo widget
         ),
+
       ),
     );
   }
