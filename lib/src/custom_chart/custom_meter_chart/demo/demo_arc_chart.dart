@@ -20,7 +20,7 @@ class DemoArcChart extends StatelessWidget {
           mainAxisSpacing: 30,
           children: [
             // Top Left
-            const DashedGaugeWidget(
+            const DashedMeterWidget(
               value: 70,
               label: "sales",
               arcRadius: 50,

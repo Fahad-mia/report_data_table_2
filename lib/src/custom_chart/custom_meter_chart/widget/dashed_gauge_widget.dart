@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:report_data_table_2/src/custom_chart/custom_meter_chart/model/design_helper/dashed_gauge_painter.dart';
 
-class DashedGaugeWidget extends StatelessWidget {
+class DashedMeterWidget extends StatelessWidget {
   final double value;
   final String label;
 
@@ -13,7 +13,7 @@ class DashedGaugeWidget extends StatelessWidget {
   final Color activeColorEnd;
   final Color inactiveColor;
 
-  const DashedGaugeWidget({
+  const DashedMeterWidget({
     super.key,
     required this.value,
     this.label = "MEMORY",
