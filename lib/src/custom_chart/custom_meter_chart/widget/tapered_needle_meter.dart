@@ -7,6 +7,9 @@ class TaperedNeedleMeter extends StatelessWidget {
   final double maxValue;
   final String label;
   final bool isShowingInnerLine;
+  final bool isAnimate;
+  final Duration animationDuration;
+
 
   // Style Properties
   final double arcRadius;
@@ -25,6 +28,8 @@ class TaperedNeedleMeter extends StatelessWidget {
     this.label = "MEMORY",
     this.arcRadius = 80,
     this.arcWidth = 22,
+    this.isAnimate = true,
+    this.animationDuration = const Duration(milliseconds: 3000),
     this.activeGradient = const [Color(0xFF4A148C), Color(0xFFAD1457)],
     this.backgroundArcColor = const Color(0xFFEEEEEE),
     this.needleColor = const Color(0xFF424242),
@@ -42,7 +47,7 @@ class TaperedNeedleMeter extends StatelessWidget {
     return TweenAnimationBuilder<double>(
       // Animates from 0 to the target value
       tween: Tween<double>(begin: 0, end: value),
-      duration: const Duration(milliseconds: 1500), // Adjust speed here
+      duration: isAnimate ? animationDuration : Duration.zero, // Adjust speed here
       curve: Curves.easeOutQuart, // Makes the needle "settle" smoothly
       builder: (context, animatedValue, child) {
         return CustomPaint(

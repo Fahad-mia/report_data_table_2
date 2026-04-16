@@ -19,13 +19,12 @@ class DemoArcChart extends StatelessWidget {
           crossAxisSpacing: 20,
           mainAxisSpacing: 30,
           children: [
-            // Top Left
             const DashedMeterWidget(
               value: 70,
               label: "sales",
               arcRadius: 50,
             ),
-            const NeedleGaugeWidget(value: 50),
+             NeedleGaugeWidget(value: 50),
             const TaperedNeedleMeter(
               value: 60,
               label: "STORAGE",
@@ -35,9 +34,13 @@ class DemoArcChart extends StatelessWidget {
                 Color(0xFF4A148C), // Deep Purple
                 Color(0xFFAD1457), // Magenta
               ],
-              backgroundArcColor: Color(0xFFF5F5F5), // Light "Cut" color
+              backgroundArcColor: Color(0xFFF5F5F5),
+              // Light "Cut" color
               needleColor: Color(0xFF333333),
             ),
+
+
+
             // Re-use GradientArcWidget for the 4th style with different parameters
           ],
         ),

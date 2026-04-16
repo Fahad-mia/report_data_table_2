@@ -4,120 +4,62 @@ import 'package:report_data_table_2/src/custom_chart/custom_meter_chart/model/de
 class DashedMeterWidget extends StatelessWidget {
   final double value;
   final String label;
+  final bool isAnimate; // <--- The "True/False" handler
 
-  final double gaugeSize; // Total size of the widget
-  final double arcRadius; // Size of the actual circle arc
+  final double gaugeSize;
+  final double arcRadius;
   final double labelFontSize;
   final double valueFontSize;
   final Color activeColorStart;
   final Color activeColorEnd;
   final Color inactiveColor;
 
+  // Animation settings
+  final Duration animationDuration;
+
   const DashedMeterWidget({
     super.key,
     required this.value,
     this.label = "MEMORY",
-    this.gaugeSize = 69, // Defaulted to be smaller than before
-    this.arcRadius = 90, // Control the "bigness" of the arc here
+    this.isAnimate = true, // Defaults to true
+    this.gaugeSize = 69,
+    this.arcRadius = 90,
     this.valueFontSize = 24,
     this.labelFontSize = 12,
     this.activeColorStart = const Color(0xFF7B1FA2),
     this.activeColorEnd = const Color(0xFFE91E63),
     this.inactiveColor = const Color(0xFFE0E0E0),
+    this.animationDuration = const Duration(milliseconds: 3000),
   });
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: gaugeSize,
-      height: gaugeSize + 30, // Space for the bottom label
-      child: CustomPaint(
-        painter: DashedGaugePainter(
-          value: value,
-          label: label,
-          arcRadius: arcRadius,
-          valueFontSize: valueFontSize,
-          labelFontSize: labelFontSize,
-          activeColorStart: activeColorStart,
-          activeColorEnd: activeColorEnd,
-          inactiveColor: inactiveColor,
+      height: gaugeSize + 30,
+      child: TweenAnimationBuilder<double>(
+        // If isAnimate is false, it "starts" at the final value (no movement)
+        tween: Tween<double>(
+            begin: isAnimate ? 0.0 : value,
+            end: value
         ),
+        duration: isAnimate ? animationDuration : Duration.zero,
+        curve: Curves.easeOutBack, // Gives a slight "bounce" to the dashes
+        builder: (context, animatedValue, child) {
+          return CustomPaint(
+            painter: DashedGaugePainter(
+              value: animatedValue, // Uses the moving value
+              label: label,
+              arcRadius: arcRadius,
+              valueFontSize: valueFontSize,
+              labelFontSize: labelFontSize,
+              activeColorStart: activeColorStart,
+              activeColorEnd: activeColorEnd,
+              inactiveColor: inactiveColor,
+            ),
+          );
+        },
       ),
     );
   }
 }
-// class DashedGaugeWidget extends StatelessWidget {
-//   final double value; // 0–100
-//   final String label;
-//
-//   const DashedGaugeWidget({
-//     super.key,
-//     required this.value,
-//     this.label = "MEMORY",
-//   });
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return SizedBox(
-//       width: 180,
-//       height: 210, // extra space for label
-//       child: Stack(
-//         alignment: Alignment.center,
-//         children: [
-//           /// ARC
-//           Positioned(
-//             top: 0,
-//             child: CustomPaint(
-//               size: const Size(180, 180),
-//               painter: DashedGaugePainter(value),
-//             ),
-//           ),
-//
-//           /// VALUE (center of circle)
-//           Positioned(
-//             top: 65, // 👈 center align
-//             child: Text(
-//               "${value.toInt()}%",
-//               style: const TextStyle(
-//                 fontSize: 28,
-//                 fontWeight: FontWeight.bold,
-//               ),
-//             ),
-//           ),
-//
-//           /// LABEL (below gauge)
-//           Positioned(
-//             top: 150,
-//             child: Text(
-//               label,
-//               style: const TextStyle(
-//                 fontWeight: FontWeight.bold,
-//                 letterSpacing: 1.2,
-//               ),
-//             ),
-//           ),
-//
-//           /// 00 (left bottom)
-//           Positioned(
-//             top: 150,
-//             left: 240,
-//             child: const Text(
-//               "00",
-//               style: TextStyle(fontSize: 10, color: Colors.grey),
-//             ),
-//           ),
-//
-//           /// 100 (right bottom)
-//           Positioned(
-//             top: 150,
-//             right: 240,
-//             child: const Text(
-//               "100",
-//               style: TextStyle(fontSize: 10, color: Colors.grey),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }

@@ -179,7 +179,7 @@ class TaperedNeedleMeterPainter extends CustomPainter {
               fontWeight: FontWeight.w900,
               color: needleColor,
               letterSpacing: 1.5),
-      centerOffset: Offset(center.dx, center.dy + arcRadius + 10),
+      centerOffset: Offset(center.dx, center.dy + arcRadius + 0.2),
     );
   }
 
