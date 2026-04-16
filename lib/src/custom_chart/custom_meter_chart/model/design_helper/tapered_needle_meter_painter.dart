@@ -30,7 +30,7 @@ class TaperedNeedleMeterPainter extends CustomPainter {
     required this.labelFontSize,
     this.labelTextStyle,
     required this.valueSize,
-    this.isShowingInnerLine = true,
+    required this.isShowingInnerLine,
   });
   @override
   void paint(Canvas canvas, Size size) {
@@ -157,7 +157,7 @@ class TaperedNeedleMeterPainter extends CustomPainter {
       text: min.toInt().toString().padLeft(2, '0'),
       style: labelStyle,
       centerOffset: Offset(center.dx + labelRadius * cos(startAngle + 0.2),
-          center.dy + labelRadius * sin(startAngle + 0.2)),
+          center.dy + labelRadius * sin(startAngle + 0.1)),
     );
 
     _drawText(
