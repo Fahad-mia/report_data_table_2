@@ -50,32 +50,67 @@ class _CustomTableWidgetState extends State<CustomTableWidget> {
     _headerHorizontalScroll.addListener(_syncHeaderHorizontal);
   }
 
-  // ---------- SCROLL SYNC ----------
+  ///added this for solving ios scrolling issue.
+
+  void _safeJumpTo(ScrollController controller, double offset) {
+    if (!controller.hasClients) return;
+
+    final position = controller.position;
+    final safeOffset = offset.clamp(
+      position.minScrollExtent,
+      position.maxScrollExtent,
+    );
+
+    if ((controller.offset - safeOffset).abs() > 0.5) {
+      controller.jumpTo(safeOffset);
+    }
+  }
+
+  /// modify the following methods for ios.
+// ---------- SCROLL SYNC ----------
   void _syncVerticalLeft() {
     if (_isSyncingVertical) return;
+    if (!_leftVerticalScroll.hasClients || !_rightVerticalScroll.hasClients) {
+      return;
+    }
+
     _isSyncingVertical = true;
-    _rightVerticalScroll.jumpTo(_leftVerticalScroll.offset);
+    _safeJumpTo(_rightVerticalScroll, _leftVerticalScroll.offset);
     _isSyncingVertical = false;
   }
 
   void _syncVerticalRight() {
     if (_isSyncingVertical) return;
+    if (!_leftVerticalScroll.hasClients || !_rightVerticalScroll.hasClients) {
+      return;
+    }
+
     _isSyncingVertical = true;
-    _leftVerticalScroll.jumpTo(_rightVerticalScroll.offset);
+    _safeJumpTo(_leftVerticalScroll, _rightVerticalScroll.offset);
     _isSyncingVertical = false;
   }
 
   void _syncBodyHorizontal() {
     if (_isSyncingHorizontal) return;
+    if (!_rightHorizontalScroll.hasClients ||
+        !_headerHorizontalScroll.hasClients) {
+      return;
+    }
+
     _isSyncingHorizontal = true;
-    _headerHorizontalScroll.jumpTo(_rightHorizontalScroll.offset);
+    _safeJumpTo(_headerHorizontalScroll, _rightHorizontalScroll.offset);
     _isSyncingHorizontal = false;
   }
 
   void _syncHeaderHorizontal() {
     if (_isSyncingHorizontal) return;
+    if (!_rightHorizontalScroll.hasClients ||
+        !_headerHorizontalScroll.hasClients) {
+      return;
+    }
+
     _isSyncingHorizontal = true;
-    _rightHorizontalScroll.jumpTo(_headerHorizontalScroll.offset);
+    _safeJumpTo(_rightHorizontalScroll, _headerHorizontalScroll.offset);
     _isSyncingHorizontal = false;
   }
 
@@ -119,25 +154,25 @@ class _CustomTableWidgetState extends State<CustomTableWidget> {
 
   // ---------- UTILS ----------
   Widget _buildCell({
-  required double width,
-  required double height,
-  required Widget child,
-  Color? bg,
-  Border? border,
-  Alignment? alignment
-}) {
-  return Container(
-    width: width,
-    height: height,
-    padding: const EdgeInsets.symmetric(horizontal: 8),
-    alignment: alignment,
-    decoration: BoxDecoration(
-      color: bg ?? Colors.transparent,
-      border: border ?? Border.all(color: Colors.grey.shade300, width: 0.5),
-    ),
-    child: child,
-  );
-}
+    required double width,
+    required double height,
+    required Widget child,
+    Color? bg,
+    Border? border,
+    Alignment? alignment,
+  }) {
+    return Container(
+      width: width,
+      height: height,
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      alignment: alignment,
+      decoration: BoxDecoration(
+        color: bg ?? Colors.transparent,
+        border: border ?? Border.all(color: Colors.grey.shade300, width: 0.5),
+      ),
+      child: child,
+    );
+  }
 
   Widget _cellFromData(int rowIndex, int colIndex) {
     final cell = widget.data.rows[rowIndex][colIndex];
@@ -150,7 +185,7 @@ class _CustomTableWidgetState extends State<CustomTableWidget> {
       );
     }
 
-    final key = '$rowIndex\_$colIndex';
+    final key = '${rowIndex}_$colIndex';
     if (cell.editable) {
       final controller = _editingControllers.putIfAbsent(
         key,
@@ -237,6 +272,9 @@ class _CustomTableWidgetState extends State<CustomTableWidget> {
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       controller: scrollController,
+      physics: const ClampingScrollPhysics(),
+
+      /// added this for fixing the ios scrolling issue
       child: Row(
         children: headersInSection.map((h) {
           // Columns that belong to this header in this section
@@ -261,7 +299,8 @@ class _CustomTableWidgetState extends State<CustomTableWidget> {
                 alignment: h.alignment,
                 child: Text(
                   h.title,
-                  style: h.headerTextStyle ?? TextStyle(fontWeight: FontWeight.bold),
+                  style: h.headerTextStyle ??
+                      TextStyle(fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
                 bg: h.headerBGColor ?? Colors.grey.shade100,
@@ -281,7 +320,8 @@ class _CustomTableWidgetState extends State<CustomTableWidget> {
                       alignment: sub.alignment,
                       child: Text(
                         c.title,
-                        style: sub.subheaderTextStyle ?? TextStyle(fontWeight: FontWeight.w500),
+                        style: sub.subheaderTextStyle ??
+                            TextStyle(fontWeight: FontWeight.w500),
                         textAlign: TextAlign.center,
                       ),
                       bg: sub.subheaderBGColor ?? h.headerBGColor,
@@ -307,6 +347,12 @@ class _CustomTableWidgetState extends State<CustomTableWidget> {
     final body = ListView.builder(
       controller: controller,
       padding: EdgeInsets.zero,
+      primary: false,
+
+      /// added this for fixing the iso scrolling issue
+      physics: const ClampingScrollPhysics(),
+
+      /// added this for fixing the ios scrolling issue
       itemCount: widget.data.rows.length,
       itemBuilder: (_, rowIndex) {
         final row = widget.data.rows[rowIndex];
@@ -337,6 +383,9 @@ class _CustomTableWidgetState extends State<CustomTableWidget> {
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         controller: _rightHorizontalScroll,
+        physics: const ClampingScrollPhysics(),
+
+        /// added this for fixing the ios scrolling issue iphone
         child: SizedBox(width: totalWidth, child: body),
       ),
     );
@@ -362,6 +411,10 @@ class _CustomTableWidgetState extends State<CustomTableWidget> {
     final rightBody = _buildBodyPart(fixed: fixed, isLeft: false);
 
     return SingleChildScrollView(
+      primary: false,
+      physics: const ClampingScrollPhysics(),
+
+      /// added this for fixing the ios scrolling issue
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -373,7 +426,7 @@ class _CustomTableWidgetState extends State<CustomTableWidget> {
             ],
           ),
           SizedBox(
-            height:widget.tableHeight ?? 400,
+            height: widget.tableHeight ?? 400,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [if (fixed > 0) leftBody, rightBody],
